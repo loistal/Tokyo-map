@@ -1,4 +1,4 @@
-var favPlaceNames = [
+var mFavPlaceNames = [
 
 	"Akihabara",
 	"Asakusa",
@@ -10,11 +10,30 @@ var favPlaceNames = [
 
 ];
 
-// Contains Yelp reviews of all the favorite places
-var favPlacesYelp = [
+var mQueryInfo = {
+    "near": "Tokyo",
+    "client_id": "AG5MATDOQ5HAXLODDIV1YALJZA4IN3LS5XEUOPWQIGHG0BHL",
+    "client_secret": "PPJYHED0SI5WLWC05LXGD1E3T1JDQI23EWNSTQLI2MO0WEAF",
+    "version": "20170220"
+};
 
+var mFavPlacesDetails = null;
 
-];
+function getFavPlacesInfo(favPlaceNames) {
+    var i;
+    for(i = 0; i < mFavPlaceNames.length; i++) {
+        var url = "https://api.foursquare.com/v2/venues/search?limit=1&near=" + mQueryInfo.near 
+            + "&query=" + mFavPlaceNames[i] 
+            + "&v=" + mQueryInfo.version
+            + "&client_id=" + mQueryInfo.client_id 
+            + "&client_secret=" + mQueryInfo.client_secret;
+
+        $.get(url, function(data, status){
+            console.log(data);
+        });
+    }
+}
+
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -45,8 +64,20 @@ function initMap() {
 function TokyoViewModel() {
 	var self = this;
 
-	self.favPlaces = favPlacesYelp;
+    // Editable data
+    self.favPlaces = ko.observableArray([
+        new Place("Steve", self.availableMeals[0]),
+        new Place("Bert", self.availableMeals[0])
+    ]);
 }
 
-// Activates knockout.js
-ko.applyBindings(new TokyoViewModel());
+function run() {
+
+    getFavPlacesInfo(mFavPlaceNames);
+
+    // Activates knockout.js
+    ko.applyBindings(new TokyoViewModel());
+
+}
+
+run();
