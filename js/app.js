@@ -2,13 +2,31 @@ var mMap;
 
 var mFavPlaceNames = [
 
-	"Akihabara",
-	"Asakusa",
-	"Harajuku",
-	"Shibuya",
-	"Ginza",
-	"Yodobashi-Akiba",
-	"Senso-ji Temple"
+	{
+        name: "Takeshita Dori",
+        lat: 35.6715659,
+        lng: 139.7031469
+    },
+    {
+        name: "Asakusa Nakamise Street",
+        lat: 35.7113873,
+        lng: 139.794207
+    },
+    {
+        name: "Yodobashi Multimedia Akiba",
+        lat: 35.6995227,
+        lng: 139.7734171
+    },
+    {
+        name: "Meiji Jingu",
+        lat: 35.6763976,
+        lng: 139.6993259
+    },
+    {
+        name: "Shibuya Crossing",
+        lat: 35.6594087,
+        lng: 139.6981677
+    }
 
 ];
 
@@ -27,21 +45,15 @@ function httpGet(url)
     return JSON.parse(xmlHttp.responseText);
 }
 
-function getFavPlacesInfo(favPlaceNames) {
-    var favPlacesDetails = [];
-
-    var i;
-    for(i = 0; i < mFavPlaceNames.length; i++) {
+function getFavPlaceInfo(placeName) {
+    
         var url = "https://api.foursquare.com/v2/venues/search?limit=1&near=" + mQueryInfo.near 
-            + "&query=" + mFavPlaceNames[i] 
+            + "&query=" + placeName 
             + "&v=" + mQueryInfo.version
             + "&client_id=" + mQueryInfo.client_id 
             + "&client_secret=" + mQueryInfo.client_secret;
 
-            favPlacesDetails.push(httpGet(url));
-    }
-
-    return favPlacesDetails;
+    return httpGet(url);
 }
 
 
@@ -81,28 +93,33 @@ function TokyoViewModel() {
 }
 
 function run() {
+
     // Get details of favorite places 
-    var favPlacesDetails = getFavPlacesInfo(mFavPlaceNames);
     var placeIndex;
     for(placeIndex = 0; placeIndex < mFavPlaceNames.length; placeIndex++) {
-        
-        var contentString = 'Hello';
+        var currentPlace = mFavPlaceNames[placeIndex];
+        // Get fields to display in infoWindow
+        var placeName = currentPlace.name;
+
+        var contentString = placeName;
 
         var infowindow = new google.maps.InfoWindow({
           content: contentString
         });
 
-        var currentPlace = favPlacesDetails[placeIndex];
-        console.log(currentPlace);
-        var currentLoc = currentPlace.response.venues[0].location;
         var marker = new google.maps.Marker({
-          position: { lat: currentLoc.lat, lng: currentLoc.lng},
+          position: { lat: currentPlace.lat, lng: currentPlace.lng},
           map: mMap,
           title: "Example"
         });
-        marker.addListener('click', function() {
-          infowindow.open(mMap, marker);
-        });
+
+        // Use a closure to add listeners
+        google.maps.event.addListener(marker, 'click', (function(marker, placeIndex) {
+            return function() {
+                infowindow.setContent(mFavPlaceNames[placeIndex].name);
+                infowindow.open(map, marker);
+            }
+        })(marker, placeIndex));
     }
 
     // Activates knockout.js
