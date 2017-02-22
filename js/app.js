@@ -1,28 +1,25 @@
+
 var mMap;
 
 var mFavPlaceNames = [
 
-	{
+    {
         name: "Takeshita Dori",
         lat: 35.6715659,
         lng: 139.7031469
-    },
-    {
+    }, {
         name: "Asakusa Nakamise Street",
         lat: 35.7113873,
         lng: 139.794207
-    },
-    {
+    }, {
         name: "Yodobashi Multimedia Akiba",
         lat: 35.6995227,
         lng: 139.7734171
-    },
-    {
+    }, {
         name: "Meiji Jingu",
         lat: 35.6763976,
         lng: 139.6993259
-    },
-    {
+    }, {
         name: "Shibuya Crossing",
         lat: 35.6594087,
         lng: 139.6981677
@@ -37,25 +34,20 @@ var mQueryInfo = {
     "version": "20170220"
 };
 
-function httpGet(url)
-{
+function httpGet(url) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false ); 
-    xmlHttp.send( null );
-    return JSON.parse(xmlHttp.responseText);
+    xmlHttp.open("GET", url, false);
+    xmlHttp.send(null);
+
+    return xmlHttp.responseText;
 }
 
 function getFavPlaceInfo(placeName) {
-    
-        var url = "https://api.foursquare.com/v2/venues/search?limit=1&near=" + mQueryInfo.near 
-            + "&query=" + placeName 
-            + "&v=" + mQueryInfo.version
-            + "&client_id=" + mQueryInfo.client_id 
-            + "&client_secret=" + mQueryInfo.client_secret;
 
-    return httpGet(url);
+    var url = "https://api.foursquare.com/v2/venues/search?limit=1&near=" + mQueryInfo.near + "&query=" + placeName + "&v=" + mQueryInfo.version + "&client_id=" + mQueryInfo.client_id + "&client_secret=" + mQueryInfo.client_secret;
+
+    return JSON.parse(httpGet(url));
 }
-
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -83,7 +75,7 @@ function initMap() {
 //***********************
 // defines the data and behavior of the UI
 function TokyoViewModel() {
-	var self = this;
+    var self = this;
 
     // Editable data
     self.favPlaces = ko.observableArray([
@@ -96,33 +88,42 @@ function run() {
 
     // Get details of favorite places 
     var placeIndex;
-    for(placeIndex = 0; placeIndex < mFavPlaceNames.length; placeIndex++) {
-        var currentPlace = mFavPlaceNames[placeIndex];
-        // Get fields to display in infoWindow
-        var placeName = currentPlace.name;
-
-        var contentString = placeName;
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
-
+    for (placeIndex = 0; placeIndex < mFavPlaceNames.length; placeIndex++) {
         var marker = new google.maps.Marker({
-          position: { lat: currentPlace.lat, lng: currentPlace.lng},
-          map: mMap,
-          title: "Example"
+            position: { lat: mFavPlaceNames[placeIndex].lat, lng: mFavPlaceNames[placeIndex].lng },
+            map: mMap,
         });
+        var infowindow = new google.maps.InfoWindow();
 
         // Use a closure to add listeners
         google.maps.event.addListener(marker, 'click', (function(marker, placeIndex) {
             return function() {
-                infowindow.setContent(mFavPlaceNames[placeIndex].name);
+                //   Get details from foursquare
+                var placeDetails = getFavPlaceInfo(mFavPlaceNames[placeIndex].name);
+                console.log(placeDetails);
+                
+                // Extract info to display in infoWindows
+                var completeName = placeDetails.response.venues[0].name;
+                var address = placeDetails.response.venues[0].location.address;
+                var websiteUrl = placeDetails.response.venues[0].url;
+                var numberCheckins = placeDetails.response.venues[0].stats.checkinsCount;
+    
+                var contentString = '<div id="content">' 
+                    + '<h3>' + completeName + '</h3>' 
+                    + '<b>Checkins: </b>' + numberCheckins
+                    + '<br>'
+                    + '<b>Website: </b> <a href="' + websiteUrl +'">' + websiteUrl + '</a>'
+                    + '<br>'
+                    + '<b>Address: </b> ' + address
+                    + '</div>';
+
+                infowindow.setContent(contentString);
                 infowindow.open(map, marker);
             }
         })(marker, placeIndex));
     }
 
     // Activates knockout.js
-   // ko.applyBindings(new TokyoViewModel());
+    // ko.applyBindings(new TokyoViewModel());
 
 }
