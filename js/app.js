@@ -6,23 +6,28 @@ var mFavPlaceNames = [
     {
         name: "Takeshita Dori",
         lat: 35.6715659,
-        lng: 139.7031469
+        lng: 139.7031469,
+        imgSrc: "img/favPlaces/takeshita.jpg"
     }, {
         name: "Asakusa Nakamise Street",
         lat: 35.7113873,
-        lng: 139.794207
+        lng: 139.794207,
+        imgSrc: "img/favPlaces/asakusa.jpg"
     }, {
         name: "Yodobashi Multimedia Akiba",
         lat: 35.6995227,
-        lng: 139.7734171
+        lng: 139.7734171,
+        imgSrc: "img/favPlaces/akihabara.jpg"
     }, {
         name: "Meiji Jingu",
         lat: 35.6763976,
-        lng: 139.6993259
+        lng: 139.6993259,
+        imgSrc: "img/favPlaces/meiji.jpg"
     }, {
         name: "Shibuya Crossing",
         lat: 35.6594087,
-        lng: 139.6981677
+        lng: 139.6981677,
+        imgSrc: "img/favPlaces/shibuya.jpg"
     }
 
 ];
@@ -70,17 +75,21 @@ function initMap() {
     run();
 }
 
+var FavPlace = function(data) {
+    this.name = data.name;
+    this.imgSrc = data.imgSrc;
+}
+
 //***********************
 //*    VIEW MODEL       *
 //***********************
-// defines the data and behavior of the UI
-function TokyoViewModel() {
+var TokyoViewModel = function() {
     var self = this;
 
     // Editable data
-    self.favPlaces = ko.observableArray([
-        new Place("Steve", self.availableMeals[0]),
-        new Place("Bert", self.availableMeals[0])
+    this.favPlaces = ko.observableArray([
+        new FavPlace("Steve", self.availableMeals[0]),
+        new FavPlace("Bert", self.availableMeals[0])
     ]);
 }
 
