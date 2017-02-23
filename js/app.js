@@ -72,7 +72,7 @@ function initMap() {
         center: center
     });
 
-    run();
+    init();
 }
 
 // Object representation of a favorite place
@@ -100,7 +100,8 @@ var TokyoViewModel = function() {
 
 }
 
-function run() {
+// Initialize the map and adds markers with infoWindows
+function init() {
 
     // Get details of favorite places 
     var placeIndex;
