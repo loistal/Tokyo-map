@@ -1,7 +1,7 @@
 
 var mMap;
 
-var mFavPlaceNames = [
+var mFavPlaces = [
 
     {
         name: "Takeshita Dori",
@@ -75,31 +75,38 @@ function initMap() {
     run();
 }
 
+// Object representation of a favorite place
 var FavPlace = function(data) {
     this.name = data.name;
     this.imgSrc = data.imgSrc;
 }
 
-//***********************
-//*    VIEW MODEL       *
-//***********************
+// View Model
 var TokyoViewModel = function() {
     var self = this;
 
-    // Editable data
-    this.favPlaces = ko.observableArray([
-        new FavPlace("Steve", self.availableMeals[0]),
-        new FavPlace("Bert", self.availableMeals[0])
-    ]);
+    // All the favorite places
+    this.favPlaces = ko.observableArray([]);
+    mFavPlaces.forEach(function(place){
+        self.favPlaces.push(new FavPlace(place));
+    });
+
+    // Place currently selected in the sidebar
+    this.currentSidebarPlace = ko.observable( this.favPlaces()[0] );
+
+    this.changeSidebarPlace = function(place) {
+        self.currentSidebarPlace(place);
+    };
+
 }
 
 function run() {
 
     // Get details of favorite places 
     var placeIndex;
-    for (placeIndex = 0; placeIndex < mFavPlaceNames.length; placeIndex++) {
+    for (placeIndex = 0; placeIndex < mFavPlaces.length; placeIndex++) {
         var marker = new google.maps.Marker({
-            position: { lat: mFavPlaceNames[placeIndex].lat, lng: mFavPlaceNames[placeIndex].lng },
+            position: { lat: mFavPlaces[placeIndex].lat, lng: mFavPlaces[placeIndex].lng },
             map: mMap,
         });
         var infowindow = new google.maps.InfoWindow();
@@ -107,8 +114,8 @@ function run() {
         // Use a closure to add listeners
         google.maps.event.addListener(marker, 'click', (function(marker, placeIndex) {
             return function() {
-                //   Get details from foursquare
-                var placeDetails = getFavPlaceInfo(mFavPlaceNames[placeIndex].name);
+                // Get details from foursquare
+                var placeDetails = getFavPlaceInfo(mFavPlaces[placeIndex].name);
                 console.log(placeDetails);
                 
                 // Extract info to display in infoWindows
