@@ -109,7 +109,8 @@ function run() {
             position: { lat: mFavPlaces[placeIndex].lat, lng: mFavPlaces[placeIndex].lng },
             map: mMap,
         });
-        var infowindow = new google.maps.InfoWindow();
+        var infowindow = new google.maps.InfoWindow({
+        });
 
         // Use a closure to add listeners
         google.maps.event.addListener(marker, 'click', (function(marker, placeIndex) {
@@ -124,8 +125,9 @@ function run() {
                 var websiteUrl = placeDetails.response.venues[0].url;
                 var numberCheckins = placeDetails.response.venues[0].stats.checkinsCount;
     
-                var contentString = '<div id="content">' 
-                    + '<h3>' + completeName + '</h3>' 
+                var contentString = '<div class="infoWindow">' 
+                    + '<img class="img-fluid img-thumbnail" src="' + mFavPlaces[placeIndex].imgSrc + '" style="margin-bottom:1rem;" alt="'+ completeName + '" />'
+                    + '<h4>' + completeName + '</h4>' 
                     + '<b>Checkins: </b>' + numberCheckins
                     + '<br>'
                     + '<b>Website: </b> <a href="' + websiteUrl +'">' + websiteUrl + '</a>'

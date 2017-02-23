@@ -39,6 +39,14 @@ html {
     margin-left: 50px;
 }
 
+.infoWindow {
+    max-width: 20rem;
+}
+
+.infoWindow img {
+    width: 100%;
+}
+
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
