@@ -1,4 +1,3 @@
-
 var mFavPlaces = [
 
     {
@@ -45,11 +44,35 @@ function httpGet(url) {
     return xmlHttp.responseText;
 }
 
-function getFavPlaceInfo(placeName) {
+function httpGetAsync(theUrl, callback, infoWindow, placeIndex, marker) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText, infoWindow, placeIndex, marker);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
 
+function setFavPlaceInfo(placeName, infoWindow, placeIndex, marker) {
     var url = "https://api.foursquare.com/v2/venues/search?limit=1&near=" + mQueryInfo.near + "&query=" + placeName + "&v=" + mQueryInfo.version + "&client_id=" + mQueryInfo.client_id + "&client_secret=" + mQueryInfo.client_secret;
+    httpGetAsync(url, setInfoWindowContent, infoWindow, placeIndex, marker);
+}
 
-    return JSON.parse(httpGet(url));
+function setInfoWindowContent(placeDetailsText, infoWindow, placeIndex, marker) {
+
+    var placeDetails = JSON.parse(placeDetailsText);
+
+    // Extract info to display in infoWindows
+    var completeName = placeDetails.response.venues[0].name;
+    var address = placeDetails.response.venues[0].location.address;
+    var websiteUrl = placeDetails.response.venues[0].url;
+    var numberCheckins = placeDetails.response.venues[0].stats.checkinsCount;
+
+    var contentString = '<div class="infoWindow">' + '<img class="img-fluid img-thumbnail" src="' + mFavPlaces[placeIndex].imgSrc + '" style="margin-bottom:1rem;" alt="' + completeName + '" />' + '<h4>' + completeName + '</h4>' + '<b>Checkins: </b>' + numberCheckins + '<br>' + '<b>Website: </b> <a href="' + websiteUrl + '">' + websiteUrl + '</a>' + '<br>' + '<b>Address: </b> ' + address + '</div>';
+
+    infoWindow.setContent(contentString);
+    infoWindow.open(mMap, marker);
 }
 
 function openNav() {
@@ -74,12 +97,12 @@ var TokyoViewModel = function() {
 
     // All the favorite places
     this.favPlaces = ko.observableArray([]);
-    mFavPlaces.forEach(function(place){
+    mFavPlaces.forEach(function(place) {
         self.favPlaces.push(new FavPlace(place));
     });
 
     // Place currently selected in the sidebar
-    this.currentSidebarPlace = ko.observable( this.favPlaces()[0] );
+    this.currentSidebarPlace = ko.observable(this.favPlaces()[0]);
 
     this.changeSidebarPlace = function(place) {
         self.currentSidebarPlace(place);
@@ -103,40 +126,20 @@ function initMap() {
             position: { lat: mFavPlaces[placeIndex].lat, lng: mFavPlaces[placeIndex].lng },
             map: mMap,
         });
-        var infowindow = new google.maps.InfoWindow({
-        });
+        var infowindow = new google.maps.InfoWindow({});
 
         // Use a closure to add listeners
         google.maps.event.addListener(marker, 'click', (function(marker, placeIndex) {
             return function() {
-                // Get details from foursquare
-                var placeDetails = getFavPlaceInfo(mFavPlaces[placeIndex].name);
-                console.log(placeDetails);
-                
-                // Extract info to display in infoWindows
-                var completeName = placeDetails.response.venues[0].name;
-                var address = placeDetails.response.venues[0].location.address;
-                var websiteUrl = placeDetails.response.venues[0].url;
-                var numberCheckins = placeDetails.response.venues[0].stats.checkinsCount;
-    
-                var contentString = '<div class="infoWindow">' 
-                    + '<img class="img-fluid img-thumbnail" src="' + mFavPlaces[placeIndex].imgSrc + '" style="margin-bottom:1rem;" alt="'+ completeName + '" />'
-                    + '<h4>' + completeName + '</h4>' 
-                    + '<b>Checkins: </b>' + numberCheckins
-                    + '<br>'
-                    + '<b>Website: </b> <a href="' + websiteUrl +'">' + websiteUrl + '</a>'
-                    + '<br>'
-                    + '<b>Address: </b> ' + address
-                    + '</div>';
+                // Set infoWindow's content
+                setFavPlaceInfo(mFavPlaces[placeIndex].name, infowindow, placeIndex, marker);
 
-                infowindow.setContent(contentString);
-                infowindow.open(mMap, marker);
             }
         })(marker, placeIndex));
     }
 
 
-    
+
 }
 
 // Activates knockout.js
