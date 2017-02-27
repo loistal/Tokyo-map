@@ -14,19 +14,23 @@
     <div id="full-height">
         <div id="map"></div>
         <nav class="navbar navbar-inverse bg-inverse navbar-toggleable-md navbar-light bg-faded">
-            <a class="navbar-brand" href="#">Tokyo's Best</a>
-            <!-- Default dropup button -->
-            <div class="btn-group dropup">
-                <button type="button" class="btn btn-secondary">Filter</button>
+            <a class="navbar-brand" href="#">
+                <i id="foursquare-logo" class="fa fa-foursquare" aria-hidden="true"></i>
+            </a>
+            <div id="location-dropup" class="btn-group dropup">
+                <button type="button" class="btn btn-secondary">Best locations</button>
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div data-bind="foreach:favPlaces" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a data-bind="text: name" class="dropdown-item" href="#">Action</a>
                 </div>
+
             </div>
         </nav>
     </div>
+    <!-- Foursquare logo -->
+    <script src="https://use.fontawesome.com/5228693ec0.js"></script>
     <!-- Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
