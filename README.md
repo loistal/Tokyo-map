@@ -1,8 +1,16 @@
 ## TODO
 ### Important
-* Add favPlaces to sidebar with KnockoutJs
-* Style sidebar
-* Close sidebar when clicking icon
+* Mobile and tablet: menu should open up from bottom to top
+* make sure page is exactly 100% no matter the display
+* Add dropdown or search option
+* Animate markers when clicking
+* Make data requests asynchronous
+* Handle data request errors
+* Add foursquare logo in infowWindow
+
 
 ### Optimizations
-* Add foursquare logo in infowWindow
+
+
+### Credits
+* Foursquare

@@ -1,20 +1,18 @@
 
-var mMap;
-
 var mFavPlaces = [
 
     {
-        name: "Takeshita Dori",
+        name: "Takeshita Street",
         lat: 35.6715659,
         lng: 139.7031469,
         imgSrc: "img/favPlaces/takeshita.jpg"
     }, {
-        name: "Asakusa Nakamise Street",
+        name: "Nakamise Street",
         lat: 35.7113873,
         lng: 139.794207,
         imgSrc: "img/favPlaces/asakusa.jpg"
     }, {
-        name: "Yodobashi Multimedia Akiba",
+        name: "Yodobashi-Akiba",
         lat: 35.6995227,
         lng: 139.7734171,
         imgSrc: "img/favPlaces/akihabara.jpg"
@@ -64,17 +62,6 @@ function closeNav() {
     document.getElementById("map").style.marginLeft = "0";
 }
 
-function initMap() {
-
-    var center = { lat: 35.6809814, lng: 139.7538745 };
-    mMap = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: center
-    });
-
-    init();
-}
-
 // Object representation of a favorite place
 var FavPlace = function(data) {
     this.name = data.name;
@@ -101,7 +88,13 @@ var TokyoViewModel = function() {
 }
 
 // Initialize the map and adds markers with infoWindows
-function init() {
+function initMap() {
+
+    var center = { lat: 35.6809814, lng: 139.7538745 };
+    mMap = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: center
+    });
 
     // Get details of favorite places 
     var placeIndex;
@@ -137,12 +130,14 @@ function init() {
                     + '</div>';
 
                 infowindow.setContent(contentString);
-                infowindow.open(map, marker);
+                infowindow.open(mMap, marker);
             }
         })(marker, placeIndex));
     }
 
-    // Activates knockout.js
-    // ko.applyBindings(new TokyoViewModel());
 
+    
 }
+
+// Activates knockout.js
+ko.applyBindings(new TokyoViewModel());

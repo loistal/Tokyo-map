@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,23 +11,30 @@
 </head>
 
 <body>
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a data-bind="text: ">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
+    <div id="full-height">
+        <div id="map"></div>
+        <nav class="navbar navbar-inverse bg-inverse navbar-toggleable-md navbar-light bg-faded">
+            <a class="navbar-brand" href="#">Tokyo's Best</a>
+            <!-- Default dropup button -->
+            <div class="btn-group dropup">
+                <button type="button" class="btn btn-secondary">Filter</button>
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div data-bind="foreach:favPlaces" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a data-bind="text: name" class="dropdown-item" href="#">Action</a>
+                </div>
+            </div>
+        </nav>
     </div>
-    <div id="map"></div>
-    <img id="sidebar-icon" onclick="openNav()" src="img/sidebar-icon.svg" />
-    <script src="https://use.fontawesome.com/5228693ec0.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtODGjlNobKNCo4OX_voxjIkNkHCfQ3I4&callback=initMap"></script>
-
-    <!-- Bootstrap js -->
+    <!-- Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- KnockoutJS -->
+    <script src="js/lib/knockout-3.4.1.js"></script>
     <script src="js/app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtODGjlNobKNCo4OX_voxjIkNkHCfQ3I4&callback=initMap"></script>
 </body>
 
 </html>
