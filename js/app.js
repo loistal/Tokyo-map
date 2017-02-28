@@ -29,6 +29,9 @@ var mFavPlaces = [
 
 ];
 
+// Stores the Google maps markers for the favPlaces
+var mMarkers = {};
+
 var mQueryInfo = {
     "near": "Tokyo",
     "client_id": "AG5MATDOQ5HAXLODDIV1YALJZA4IN3LS5XEUOPWQIGHG0BHL",
@@ -36,19 +39,12 @@ var mQueryInfo = {
     "version": "20170220"
 };
 
-function httpGet(url) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", url, false);
-    xmlHttp.send(null);
-
-    return xmlHttp.responseText;
-}
-
 function httpGetAsync(theUrl, callback, infoWindow, placeIndex, marker) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             callback(xmlHttp.responseText, infoWindow, placeIndex, marker);
+        }
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
@@ -75,20 +71,10 @@ function setInfoWindowContent(placeDetailsText, infoWindow, placeIndex, marker) 
     infoWindow.open(mMap, marker);
 }
 
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("map").style.marginLeft = "250px";
-}
-
-function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("map").style.marginLeft = "0";
-}
-
 // Object representation of a favorite place
 var FavPlace = function(data) {
-    this.name = data.name;
-    this.imgSrc = data.imgSrc;
+    this.name = ko.observable(data.name);
+    this.imgSrc = ko.observable(data.imgSrc);
 }
 
 // View Model
@@ -100,14 +86,11 @@ var TokyoViewModel = function() {
     mFavPlaces.forEach(function(place) {
         self.favPlaces.push(new FavPlace(place));
     });
-
-    // Place currently selected in the sidebar
-    this.currentSidebarPlace = ko.observable(this.favPlaces()[0]);
-
-    this.changeSidebarPlace = function(place) {
-        self.currentSidebarPlace(place);
-    };
-
+ 
+    this.openInfoWindow = function(favPlace) {
+        var marker = mMarkers[favPlace.name()];
+        google.maps.event.trigger(marker, 'click');
+    }
 }
 
 // Initialize the map and adds markers with infoWindows
@@ -126,6 +109,7 @@ function initMap() {
             position: { lat: mFavPlaces[placeIndex].lat, lng: mFavPlaces[placeIndex].lng },
             map: mMap,
         });
+
         var infowindow = new google.maps.InfoWindow({});
 
         // Use a closure to add listeners
@@ -134,10 +118,15 @@ function initMap() {
                 // Set infoWindow's content
                 setFavPlaceInfo(mFavPlaces[placeIndex].name, infowindow, placeIndex, marker);
 
+                // Set marker animation (lasts for 1 cycle == 750ms)
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function() { marker.setAnimation(null); }, 750);
             }
         })(marker, placeIndex));
-    }
 
+        // Store the marker
+        mMarkers[mFavPlaces[placeIndex].name] = marker;
+    }
 
 
 }

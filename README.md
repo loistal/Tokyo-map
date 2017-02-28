@@ -1,11 +1,23 @@
-## TODO
-### Important
-* Animate markers when clicking
-* Handle data request errors
-* Link dropup items to markers
+# TOKYO MAP
 
-### Optimizations
+## What is this?
+This web application is a map of the Tokyo area featuring areas which,
+in my opinion, are worth visiting (non-exclusive).
+This application works on tablets and mobile phones as well.
 
+## How to run the application
+There are 2 ways to run the application:
+
+* The simplest method consists in opening the following URL using any web browser:
+* Alternatively, you can run the application locally by:
+	* Cloning the repo: ```git clone https://github.com/loistal/Tokyo-map```
+	* Open Tokyo-map/index.html using a web browser
+
+## Technical Details
+### Libraries
+* Google Maps API
+* Foursquare API
+* KnockoutJS
 
 ### Credits
 * Foursquare

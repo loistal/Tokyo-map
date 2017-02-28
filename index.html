@@ -22,16 +22,18 @@
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
-                <div data-bind="foreach:favPlaces" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a data-bind="text: name" class="dropdown-item" href="#">Action</a>
+                <div data-bind="foreach: favPlaces" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a data-bind="text: name, click: $parent.openInfoWindow" class="dropdown-item">Place Name</a>
                 </div>
             </div>
+
         </nav>
+
     </div>
     <!-- Foursquare logo -->
     <script src="https://use.fontawesome.com/5228693ec0.js"></script>
     <!-- Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <!-- KnockoutJS -->
