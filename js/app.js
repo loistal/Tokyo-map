@@ -1,30 +1,41 @@
+var mCategories = {
+    FOOD: "FOOD",
+    SHOPPING: "SHOPPING",
+    CULTURE: "CULTURE"
+}
+
 var mFavPlaces = [
 
     {
         name: "Takeshita Street",
         lat: 35.6715659,
         lng: 139.7031469,
-        imgSrc: "img/favPlaces/takeshita.jpg"
+        imgSrc: "img/favPlaces/takeshita.jpg",
+        category: mCategories.FOOD
     }, {
         name: "Nakamise Street",
         lat: 35.7113873,
         lng: 139.794207,
-        imgSrc: "img/favPlaces/asakusa.jpg"
+        imgSrc: "img/favPlaces/asakusa.jpg",
+        category: mCategories.FOOD
     }, {
         name: "Yodobashi-Akiba",
         lat: 35.6995227,
         lng: 139.7734171,
-        imgSrc: "img/favPlaces/akihabara.jpg"
+        imgSrc: "img/favPlaces/akihabara.jpg",
+        category: mCategories.CULTURE
     }, {
         name: "Meiji Jingu",
         lat: 35.6763976,
         lng: 139.6993259,
-        imgSrc: "img/favPlaces/meiji.jpg"
+        imgSrc: "img/favPlaces/meiji.jpg",
+        category: mCategories.FOOD
     }, {
         name: "Shibuya Crossing",
         lat: 35.6594087,
         lng: 139.6981677,
-        imgSrc: "img/favPlaces/shibuya.jpg"
+        imgSrc: "img/favPlaces/shibuya.jpg",
+        category: mCategories.FOOD
     }
 
 ];
@@ -87,10 +98,34 @@ var TokyoViewModel = function() {
         self.favPlaces.push(new FavPlace(place));
     });
 
+    // Open the infoWindow corresponding to the given place
     this.openInfoWindow = function(favPlace) {
         var marker = mMarkers[favPlace.name()];
         google.maps.event.trigger(marker, 'click');
     }
+
+    // Places that should be displayed in the search list
+    this.filteredPlaces = ko.observableArray([]);
+    mFavPlaces.forEach(function(place) {
+        self.filteredPlaces.push(new FavPlace(place));
+    });
+
+    this.query = ko.observable('');
+
+    // search function associated to the search field
+    this.search = function(value) {
+        self.filteredPlaces.removeAll();
+
+        for(var i in mFavPlaces) {
+            var currentFavPlace = mFavPlaces[i];
+            if(currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                self.filteredPlaces.push(currentFavPlace);
+            }
+        }
+
+    }
+
+    this.query.subscribe(this.search);
 }
 
 // Initialize the map and adds markers with infoWindows
@@ -133,3 +168,6 @@ function initMap() {
 
 // Activates knockout.js
 ko.applyBindings(new TokyoViewModel());
+
+
+
