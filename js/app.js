@@ -40,14 +40,16 @@ var mQueryInfo = {
 };
 
 function httpGetAsync(theUrl, callback, infoWindow, placeIndex, marker) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-            callback(xmlHttp.responseText, infoWindow, placeIndex, marker);
+    $.ajax({
+        url: theUrl,
+        success: function(data) {
+            callback(data, infoWindow, placeIndex, marker);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error(textStatus);
+            alert("Connection problem. Please check your connection and reload the page!");
         }
-    }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
-    xmlHttp.send(null);
+    });
 }
 
 function setFavPlaceInfo(placeName, infoWindow, placeIndex, marker) {
@@ -55,9 +57,7 @@ function setFavPlaceInfo(placeName, infoWindow, placeIndex, marker) {
     httpGetAsync(url, setInfoWindowContent, infoWindow, placeIndex, marker);
 }
 
-function setInfoWindowContent(placeDetailsText, infoWindow, placeIndex, marker) {
-
-    var placeDetails = JSON.parse(placeDetailsText);
+function setInfoWindowContent(placeDetails, infoWindow, placeIndex, marker) {
 
     // Extract info to display in infoWindows
     var completeName = placeDetails.response.venues[0].name;
@@ -86,7 +86,7 @@ var TokyoViewModel = function() {
     mFavPlaces.forEach(function(place) {
         self.favPlaces.push(new FavPlace(place));
     });
- 
+
     this.openInfoWindow = function(favPlace) {
         var marker = mMarkers[favPlace.name()];
         google.maps.event.trigger(marker, 'click');
