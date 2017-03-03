@@ -19,7 +19,21 @@
             </li>
         </ul>
         -->
-        <input type="text" class="search-query" placeholder="Search" data-bind="value: query, valueUpdate: 'keyup'">
+        <div id="live-search">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search...">
+            <ul id="myUL">
+                <li><a href="#" class="header">Food</a></li>
+                <li><a href="#">Adele</a></li>
+                <li><a href="#">Agnes</a></li>
+                <li><a href="#" class="header">Shopping</a></li>
+                <li><a href="#">Billy</a></li>
+                <li><a href="#">Bob</a></li>
+                <li><a href="#" class="header">Culture</a></li>
+                <li><a href="#">Calvin</a></li>
+                <li><a href="#">Christina</a></li>
+                <li><a href="#">Cindy</a></li>
+            </ul>
+        </div>
         <div id="map"></div>
         <nav class="navbar navbar-inverse bg-inverse navbar-toggleable-md navbar-light bg-faded">
             <a class="navbar-brand" href="#">

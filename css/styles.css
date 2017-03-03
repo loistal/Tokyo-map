@@ -3,13 +3,6 @@ body, html {
     width: 100%;
 }
 
-input {
-    position: absolute;
-    right: 2%;
-    top: 2%;
-    z-index: 2;
-}
-
 .infoWindow {
     max-width: 20rem;
 }
@@ -51,40 +44,47 @@ input {
     }
 }
 
-    #custom-search-form {
-        margin:0;
-        margin-top: 5px;
-        padding: 0;
-    }
- 
-    #custom-search-form .search-query {
-        padding-right: 3px;
-        padding-right: 4px \9;
-        padding-left: 3px;
-        padding-left: 4px \9;
-        /* IE7-8 doesn't have border-radius, so don't indent the padding */
- 
-        margin-bottom: 0;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
-    }
- 
-    #custom-search-form button {
-        border: 0;
-        background: none;
-        /** belows styles are working good */
-        padding: 2px 5px;
-        margin-top: 2px;
-        position: relative;
-        left: -28px;
-        /* IE7-8 doesn't have border-radius, so don't indent the padding */
-        margin-bottom: 0;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
-    }
- 
-    .search-query:focus + button {
-        z-index: 3;   
-    }
+#myInput {
+    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+    background-position: 10px 12px; /* Position the search icon */
+    background-repeat: no-repeat; /* Do not repeat the icon image */
+    width: 100%; /* Full-width */
+    font-size: 1rem; /* Increase font-size */
+    padding: 1rem 1rem 1rem 1rem; /* Add some padding */
+    border: 0.1rem solid #ddd; /* Add a grey border */
+    margin-bottom: 1rem; /* Add some space below the input */
+}
+
+#myUL {
+    /* Remove default list styling */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#myUL li a {
+    border: 0.1rem solid #ddd; /* Add a border to all links */
+    margin-top: -0.1rem; /* Prevent double borders */
+    background-color: #f6f6f6; /* Grey background color */
+    padding: 1rem; /* Add some padding */
+    text-decoration: none; /* Remove default text underline */
+    font-size: 0.7rem; /* Increase the font-size */
+    color: black; /* Add a black text color */
+    display: block; /* Make it into a block element to fill the whole list */
+}
+
+#myUL li a.header {
+    background-color: #e2e2e2; /* Add a darker background color for headers */
+    cursor: default; /* Change cursor style */
+}
+
+#myUL li a:hover:not(.header) {
+    background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
+
+#live-search {
+    position: absolute;
+    right: 3%;
+    top: 2%;
+    z-index: 1;
+}
