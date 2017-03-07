@@ -1,8 +1,13 @@
-var mCategories = {
-    FOOD: "FOOD",
-    SHOPPING: "SHOPPING",
-    CULTURE: "CULTURE"
-}
+var mCategories = [
+
+    {
+        catName: "FOOD"
+    }, {
+        catName: "SHOPPING"
+    }, {
+        catName: "CULTURE"
+    }
+];
 
 var mFavPlaces = [
 
@@ -70,11 +75,19 @@ function setFavPlaceInfo(placeName, infoWindow, placeIndex, marker) {
 
 function setInfoWindowContent(placeDetails, infoWindow, placeIndex, marker) {
 
-    // Extract info to display in infoWindows
-    var completeName = placeDetails.response.venues[0].name;
-    var address = placeDetails.response.venues[0].location.address;
-    var websiteUrl = placeDetails.response.venues[0].url;
-    var numberCheckins = placeDetails.response.venues[0].stats.checkinsCount;
+    var noDataErrMsg = "No data available";
+
+    var websiteUrl;
+    placeDetails.response.venues[0].url ? websiteUrl = placeDetails.response.venues[0].url : websiteUrl = noDataErrMsg;
+
+    var completeName;
+    placeDetails.response.venues[0].name ? completeName = placeDetails.response.venues[0].name : completeName = noDataErrMsg;
+
+    var address;
+    placeDetails.response.venues[0].location.address ? address = placeDetails.response.venues[0].location.address : address = noDataErrMsg;
+
+    var numberCheckins;
+    placeDetails.response.venues[0].stats.checkinsCount ? numberCheckins = placeDetails.response.venues[0].stats.checkinsCount : numberCheckins = noDataErrMsg;
 
     var contentString = '<div class="infoWindow">' + '<img class="img-fluid img-thumbnail" src="' + mFavPlaces[placeIndex].imgSrc + '" style="margin-bottom:1rem;" alt="' + completeName + '" />' + '<h4>' + completeName + '</h4>' + '<b>Checkins: </b>' + numberCheckins + '<br>' + '<b>Website: </b> <a href="' + websiteUrl + '">' + websiteUrl + '</a>' + '<br>' + '<b>Address: </b> ' + address + '</div>';
 
@@ -103,8 +116,19 @@ function myFunction() {
 
 // Object representation of a favorite place
 var FavPlace = function(data) {
+
+    var self = this;
+
     this.name = ko.observable(data.name);
     this.imgSrc = ko.observable(data.imgSrc);
+    this.category = ko.observable(data.category);
+    this.listDisplayInfo = ko.pureComputed(function() {
+        return self.category + " " + self.name;
+    }, this);
+}
+
+var Category = function(category) {
+    this.catName = ko.observable(category.catName);
 }
 
 // View Model
@@ -123,6 +147,11 @@ var TokyoViewModel = function() {
         google.maps.event.trigger(marker, 'click');
     }
 
+    this.categories = ko.observableArray([]);
+    mCategories.forEach(function(category) {
+        self.categories.push(new Category(category));
+    });
+
     // Places that should be displayed in the search list
     this.filteredPlaces = ko.observableArray([]);
     mFavPlaces.forEach(function(place) {
@@ -131,17 +160,16 @@ var TokyoViewModel = function() {
 
     this.query = ko.observable('');
 
-    // search function associated to the search field
+    // search function associated with the search field
     this.search = function(value) {
         self.filteredPlaces.removeAll();
 
-        for(var i in mFavPlaces) {
+        for (var i in mFavPlaces) {
             var currentFavPlace = mFavPlaces[i];
-            if(currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            if (currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 self.filteredPlaces.push(currentFavPlace);
             }
         }
-
     }
 
     this.query.subscribe(this.search);
@@ -152,7 +180,7 @@ function initMap() {
 
     var center = { lat: 35.6809814, lng: 139.7538745 };
     mMap = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
+        zoom: 13,
         center: center
     });
 
@@ -187,6 +215,3 @@ function initMap() {
 
 // Activates knockout.js
 ko.applyBindings(new TokyoViewModel());
-
-
-
