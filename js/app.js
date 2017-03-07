@@ -99,7 +99,7 @@ function setInfoWindowContent(placeDetails, infoWindow, placeIndex, marker) {
 function myFunction() {
     // Declare variables
     var input, filter, ul, li, a, i;
-    input = document.getElementById('myInput');
+    input = document.getElementById('categoryInput');
     filter = input.value.toUpperCase();
     ul = document.getElementById("myUL");
     li = ul.getElementsByTagName('li');
@@ -130,6 +130,23 @@ var FavPlace = function(data) {
 
 var Category = function(category) {
     this.catName = ko.observable(category.catName);
+    this.queryCategory = function() {
+        Search(this.catName());
+    }
+}
+
+// search function associated with the search field
+var Search = function(value) {
+    for (var i in mFavPlaces) {
+        var currentFavPlace = mFavPlaces[i];
+        if ((currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) && (value.length != 0)) {
+            var marker = mMarkers[currentFavPlace.name];
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+        } else {
+            var marker = mMarkers[currentFavPlace.name];
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+        }
+    }
 }
 
 // View Model
@@ -155,24 +172,7 @@ var TokyoViewModel = function() {
 
 
     this.query = ko.observable('');
-
-    // search function associated with the search field
-    this.search = function(value) {
-        console.log(value);
-        for (var i in mFavPlaces) {
-            var currentFavPlace = mFavPlaces[i];
-            console.log(currentFavPlace);
-            if ((currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) && (value.length != 0) ) {
-                var marker = mMarkers[currentFavPlace.name];
-                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
-            } else {
-                var marker = mMarkers[currentFavPlace.name];
-                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
-            }
-        }
-    }
-
-    this.query.subscribe(this.search);
+    this.query.subscribe(Search);
 }
 
 // Initialize the map and adds markers with infoWindows

@@ -13,9 +13,9 @@
 <body>
     <div id="full-height">
         <div id="live-search">
-            <input data-bind="value: query, valueUpdate: 'keyup'" type="text" id="myInput" onkeyup="myFunction()" placeholder="Search...">
+            <input data-bind="value: query, valueUpdate: 'keypress'" id="categoryInput" type="text"  onkeyup="myFunction()" placeholder="Search...">
             <ul data-bind="foreach: categories" id="myUL">
-                <li></b><a href="#" data-bind="text: catName"></a></li>
+                <li></b><a href="#" data-bind="text: catName, click: queryCategory"></a></li>
             </ul>
         </div>
         <div id="map"></div>
