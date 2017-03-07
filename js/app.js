@@ -7,6 +7,7 @@ var mCategories = [
     }, {
         catName: "CULTURE"
     }
+
 ];
 
 var mFavPlaces = [
@@ -16,31 +17,31 @@ var mFavPlaces = [
         lat: 35.6715659,
         lng: 139.7031469,
         imgSrc: "img/favPlaces/takeshita.jpg",
-        category: mCategories.FOOD
+        category: mCategories[0].catName
     }, {
         name: "Nakamise Street",
         lat: 35.7113873,
         lng: 139.794207,
         imgSrc: "img/favPlaces/asakusa.jpg",
-        category: mCategories.FOOD
+        category: mCategories[0].catName
     }, {
         name: "Yodobashi-Akiba",
         lat: 35.6995227,
         lng: 139.7734171,
         imgSrc: "img/favPlaces/akihabara.jpg",
-        category: mCategories.CULTURE
+        category: mCategories[2].catName
     }, {
         name: "Meiji Jingu",
         lat: 35.6763976,
         lng: 139.6993259,
         imgSrc: "img/favPlaces/meiji.jpg",
-        category: mCategories.FOOD
+        category: mCategories[0].catName
     }, {
         name: "Shibuya Crossing",
         lat: 35.6594087,
         lng: 139.6981677,
         imgSrc: "img/favPlaces/shibuya.jpg",
-        category: mCategories.FOOD
+        category: mCategories[1].catName
     }
 
 ];
@@ -152,22 +153,21 @@ var TokyoViewModel = function() {
         self.categories.push(new Category(category));
     });
 
-    // Places that should be displayed in the search list
-    this.filteredPlaces = ko.observableArray([]);
-    mFavPlaces.forEach(function(place) {
-        self.filteredPlaces.push(new FavPlace(place));
-    });
 
     this.query = ko.observable('');
 
     // search function associated with the search field
     this.search = function(value) {
-        self.filteredPlaces.removeAll();
-
+        console.log(value);
         for (var i in mFavPlaces) {
             var currentFavPlace = mFavPlaces[i];
-            if (currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                self.filteredPlaces.push(currentFavPlace);
+            console.log(currentFavPlace);
+            if ((currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) && (value.length != 0) ) {
+                var marker = mMarkers[currentFavPlace.name];
+                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+            } else {
+                var marker = mMarkers[currentFavPlace.name];
+                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
             }
         }
     }
@@ -192,6 +192,8 @@ function initMap() {
             map: mMap,
         });
 
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+
         var infowindow = new google.maps.InfoWindow({});
 
         // Use a closure to add listeners
@@ -203,6 +205,7 @@ function initMap() {
                 // Set marker animation (lasts for 1 cycle == 750ms)
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 setTimeout(function() { marker.setAnimation(null); }, 750);
+
             }
         })(marker, placeIndex));
 
