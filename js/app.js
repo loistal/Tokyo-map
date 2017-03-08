@@ -80,7 +80,7 @@ function setInfoWindowContent(placeDetails, infoWindow, placeIndex, marker) {
     infoWindow.open(mMap, marker);
 }
 
-function myFunction() {
+function filterList() {
     // Declare variables
     var input, filter, ul, li, a, i;
     input = document.getElementById('categoryInput');
@@ -191,8 +191,10 @@ function initMap() {
         // Store the marker
         mMarkers[mFavPlaces[placeIndex].name] = marker;
     }
+}
 
-
+function mapError() {
+    alert("An error occurred. Please try again later.")
 }
 
 // Activates knockout.js
