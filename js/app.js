@@ -1,3 +1,4 @@
+var mMap;
 var mFavPlaces = [
 
     {
@@ -105,6 +106,10 @@ var FavPlace = function(data) {
 
     this.name = ko.observable(data.name);
     this.imgSrc = ko.observable(data.imgSrc);
+
+    this.searchPlace = function(place) {
+        OpenInfoWindow(place);
+    }
 }
 
 // search function associated with the search field
@@ -113,12 +118,19 @@ var Search = function(value) {
         var currentFavPlace = mFavPlaces[i];
         if (currentFavPlace.name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
             var marker = mMarkers[currentFavPlace.name];
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+
+            // Reset the marker's map in case it was removed by previous filtering
+            marker.setMap(mMap);
         } else {
             var marker = mMarkers[currentFavPlace.name];
-            marker.setIcon('img/transparent-marker.png');
+            marker.setMap(null);
         }
     }
+}
+
+var OpenInfoWindow = function(favPlace) {
+    var marker = mMarkers[favPlace.name()];
+    google.maps.event.trigger(marker, 'click');
 }
 
 // View Model
@@ -136,12 +148,6 @@ var TokyoViewModel = function() {
     mFavPlaces.forEach(function(place) {
         self.filteredPlaces.push(new FavPlace(place));
     });
-
-    // Open the infoWindow corresponding to the given place
-    this.openInfoWindow = function(favPlace) {
-        var marker = mMarkers[favPlace.name()];
-        google.maps.event.trigger(marker, 'click');
-    }
 
     this.query = ko.observable('');
     this.query.subscribe(Search);
@@ -177,6 +183,7 @@ function initMap() {
                 // Set marker animation (lasts for 1 cycle == 750ms)
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 setTimeout(function() { marker.setAnimation(null); }, 750);
+                console.log(infowindow);
 
             }
         })(marker, placeIndex));

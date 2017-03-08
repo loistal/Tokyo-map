@@ -15,7 +15,7 @@
         <div id="live-search">
             <input data-bind="value: query, valueUpdate: 'keyup'" id="categoryInput" type="text"  onkeyup="myFunction()" placeholder="Search...">
             <ul data-bind="foreach: filteredPlaces" id="myUL">
-                <li></b><a href="#" data-bind="text: name"></a></li>
+                <li></b><a href="#" data-bind="text: name, click: searchPlace"></a></li>
             </ul>
         </div>
         <div id="map"></div>
@@ -29,7 +29,7 @@
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div data-bind="foreach: favPlaces" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a data-bind="text: name, click: $parent.openInfoWindow" class="dropdown-item">Place Name</a>
+                    <a data-bind="text: name, click: OpenInfoWindow" class="dropdown-item">Place Name</a>
                 </div>
             </div>
         </nav>
