@@ -80,6 +80,7 @@ function setInfoWindowContent(placeDetails, infoWindow, placeIndex, marker) {
     infoWindow.open(mMap, marker);
 }
 
+// Style the list items when using a new search filter
 function filterList() {
     // Declare variables
     var input, filter, ul, li, a, i;
