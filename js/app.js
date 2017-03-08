@@ -1,15 +1,3 @@
-var mCategories = [
-
-    {
-        catName: "FOOD"
-    }, {
-        catName: "SHOPPING"
-    }, {
-        catName: "CULTURE"
-    }
-
-];
-
 var mFavPlaces = [
 
     {
@@ -17,31 +5,26 @@ var mFavPlaces = [
         lat: 35.6715659,
         lng: 139.7031469,
         imgSrc: "img/favPlaces/takeshita.jpg",
-        category: mCategories[0].catName
     }, {
         name: "Nakamise Street",
         lat: 35.7113873,
         lng: 139.794207,
         imgSrc: "img/favPlaces/asakusa.jpg",
-        category: mCategories[0].catName
     }, {
         name: "Yodobashi-Akiba",
         lat: 35.6995227,
         lng: 139.7734171,
         imgSrc: "img/favPlaces/akihabara.jpg",
-        category: mCategories[2].catName
     }, {
         name: "Meiji Jingu",
         lat: 35.6763976,
         lng: 139.6993259,
         imgSrc: "img/favPlaces/meiji.jpg",
-        category: mCategories[0].catName
     }, {
         name: "Shibuya Crossing",
         lat: 35.6594087,
         lng: 139.6981677,
         imgSrc: "img/favPlaces/shibuya.jpg",
-        category: mCategories[1].catName
     }
 
 ];
@@ -122,29 +105,18 @@ var FavPlace = function(data) {
 
     this.name = ko.observable(data.name);
     this.imgSrc = ko.observable(data.imgSrc);
-    this.category = ko.observable(data.category);
-    this.listDisplayInfo = ko.pureComputed(function() {
-        return self.category + " " + self.name;
-    }, this);
-}
-
-var Category = function(category) {
-    this.catName = ko.observable(category.catName);
-    this.queryCategory = function() {
-        Search(this.catName());
-    }
 }
 
 // search function associated with the search field
 var Search = function(value) {
     for (var i in mFavPlaces) {
         var currentFavPlace = mFavPlaces[i];
-        if ((currentFavPlace.category.toLowerCase().indexOf(value.toLowerCase()) >= 0) && (value.length != 0)) {
-            var marker = mMarkers[currentFavPlace.name];
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
-        } else {
+        if (currentFavPlace.name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
             var marker = mMarkers[currentFavPlace.name];
             marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+        } else {
+            var marker = mMarkers[currentFavPlace.name];
+            marker.setIcon('img/transparent-marker.png');
         }
     }
 }
@@ -159,17 +131,17 @@ var TokyoViewModel = function() {
         self.favPlaces.push(new FavPlace(place));
     });
 
+    // All the places selected by the current filter
+    this.filteredPlaces = ko.observableArray([]);
+    mFavPlaces.forEach(function(place) {
+        self.filteredPlaces.push(new FavPlace(place));
+    });
+
     // Open the infoWindow corresponding to the given place
     this.openInfoWindow = function(favPlace) {
         var marker = mMarkers[favPlace.name()];
         google.maps.event.trigger(marker, 'click');
     }
-
-    this.categories = ko.observableArray([]);
-    mCategories.forEach(function(category) {
-        self.categories.push(new Category(category));
-    });
-
 
     this.query = ko.observable('');
     this.query.subscribe(Search);
