@@ -80,26 +80,6 @@ function setInfoWindowContent(placeDetails, infoWindow, placeIndex, marker) {
     infoWindow.open(mMap, marker);
 }
 
-// Style the list items when using a new search filter
-function filterList() {
-    // Declare variables
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('categoryInput');
-    filter = tokyoViewModel.query().toUpperCase();
-    ul = document.getElementById("myUL");
-    li = ul.getElementsByTagName('li');
-
-    // Loop through all list items, and hide those who don't match the search query
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }
-}
-
 // Object representation of a favorite place
 var FavPlace = function(data) {
 
@@ -115,13 +95,21 @@ var FavPlace = function(data) {
 
 // search function associated with the search field
 var Search = function(value) {
+
+    // Empty the list of places to display
+    tokyoViewModel.filteredPlaces.removeAll();
+
     for (var i in mFavPlaces) {
         var currentFavPlace = mFavPlaces[i];
         if (currentFavPlace.name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            // Get the corresponding marker
             var marker = mMarkers[currentFavPlace.name];
 
             // Reset the marker's map in case it was removed by previous filtering
             marker.setMap(mMap);
+
+            // Add the place to the list of places to display in the list
+            tokyoViewModel.filteredPlaces.push(new FavPlace(currentFavPlace));
         } else {
             var marker = mMarkers[currentFavPlace.name];
             marker.setMap(null);
