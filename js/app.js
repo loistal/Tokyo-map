@@ -199,4 +199,5 @@ function mapError() {
 }
 
 // Activates knockout.js
-ko.applyBindings(new TokyoViewModel());
+var tokyoViewModel = new TokyoViewModel();
+ko.applyBindings(tokyoViewModel);
