@@ -85,7 +85,7 @@ function filterList() {
     // Declare variables
     var input, filter, ul, li, a, i;
     input = document.getElementById('categoryInput');
-    filter = input.value.toUpperCase();
+    filter = tokyoViewModel.query().toUpperCase();
     ul = document.getElementById("myUL");
     li = ul.getElementsByTagName('li');
 
