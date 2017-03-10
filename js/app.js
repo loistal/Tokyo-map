@@ -109,7 +109,9 @@ var Search = function(value) {
             marker.setMap(mMap);
 
             // Add the place to the list of places to display in the list
-            tokyoViewModel.filteredPlaces.push(new FavPlace(currentFavPlace));
+            if (value.length != 0) {
+                tokyoViewModel.filteredPlaces.push(new FavPlace(currentFavPlace));
+            }
         } else {
             var marker = mMarkers[currentFavPlace.name];
             marker.setMap(null);
@@ -134,9 +136,6 @@ var TokyoViewModel = function() {
 
     // All the places selected by the current filter
     this.filteredPlaces = ko.observableArray([]);
-    mFavPlaces.forEach(function(place) {
-        self.filteredPlaces.push(new FavPlace(place));
-    });
 
     this.query = ko.observable('');
     this.query.subscribe(Search);
